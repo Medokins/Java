@@ -1,36 +1,36 @@
 import java.util.ArrayList;
 
 public class Bank {
-    private final ArrayList<Konto> members = new ArrayList<>();
+    private final ArrayList<Account> members = new ArrayList<>();
 
-    public void utworzKonto(String id){
-        members.add(new Konto(id, new Kwota(0)));
+    public void createAccount(String id){
+        members.add(new Account(id, new Amount(0)));
     }
     @Override
     public String toString() {
         StringBuilder temp = new StringBuilder();
-        for(Konto konto: members) temp.append(konto).append(" ; ");
+        for(Account account: members) temp.append(account).append(" ; ");
         return temp.toString();
     }
-    public void wplataNaKonto(String id, Kwota x){
-        for(Konto konto: members){
-            if(id.equals(konto.getId())){
-                konto.setStan(x);
+    public void paymentIntoAccount(String id, Amount x){
+        for(Account account: members){
+            if(id.equals(account.getId())){
+                account.setBalance(x);
             }
         }
     }
-    public void wyplataZKonta(String id, Kwota x){
-        Kwota copy = new Kwota(x.getVal());
-        for(Konto konto: members){
-            if(id.equals(konto.getId())){
-                konto.setStan(Kwota.odejmij(konto.getStan(), copy));
+    public void paymentFromAccount(String id, Amount x){
+        Amount copy = new Amount(x.getVal());
+        for(Account account: members){
+            if(id.equals(account.getId())){
+                account.setBalance(Amount.subtract(account.getBalance(), copy));
             }
         }
     }
-    public Kwota stanKonta(String id){
-        for(Konto konto: members){
-            if(id.equals(konto.getId())){
-                return new Kwota(konto.getStan().getVal());
+    public Amount accountBalance(String id){
+        for(Account account: members){
+            if(id.equals(account.getId())){
+                return new Amount(account.getBalance().getVal());
             }
         }
         return null;
