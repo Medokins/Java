@@ -86,7 +86,7 @@ public class Complex {
         double c2Im = c2.getIm();
 
         if(Math.abs(c2Re) < 1e-8 && Math.abs(c2Im) < 1e-8) {
-            System.out.println("Dzielenie przez zero!");
+            System.out.println("Zero division!");
             return null;
         }
 
