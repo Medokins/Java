@@ -1,2 +1,1 @@
-public class BladPochodnej extends ArithmeticException{
-}
+public class BladPochodnej extends ArithmeticException {}

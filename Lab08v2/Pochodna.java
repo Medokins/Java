@@ -5,32 +5,29 @@ import java.io.*;
 import javax.imageio.*;
 
 public class Pochodna {
-    private Fun fun;
-    private double h = 0.001;
-    Pochodna(Funkcja funkcja) {
-        fun = funkcja;
+    private final Fun function;
+    private double h = 1e-5;
+
+    public Pochodna(Funkcja fun){
+        this.function = fun;
     }
-    Pochodna(Fun fun) {
-        this.fun = fun;
+    public Pochodna(Fun fun){
+        this.function = fun;
     }
-    public void setFun(double val){
-        if(val <= 0){
+    public void setH(double h){
+        this.h = h;
+    }
+    public double wartosc(int n, double x){
+        if(n == 1){
+            return (function.wartosc(x + h/2) - function.wartosc(x - h/2)) / h;
+        }
+        else if(n == 2){
+            return (function.wartosc(x + h) - 2*function.wartosc(x) + function.wartosc(x - h)) / (h*h);
+        }
+        else{
             throw new BladPochodnej();
         }
-        h = val;
     }
-
-    public double wartosc(int n, double x) {
-        if (n == 1) {
-            return (fun.wartosc(x + h / 2) - fun.wartosc(x - h / 2)) / h;
-        } else if(n == 2) {
-            return (fun.wartosc(x + h) - 2 * fun.wartosc(x) + fun.wartosc(x - h)) / (h * h);
-        }
-        else {
-            throw new BladPochodnej();
-        }
-    }
-
     public double[] wartosc(int n, double ... values){
         double[] solution = new double[values.length];
         int iterator = 0;
@@ -41,11 +38,9 @@ public class Pochodna {
         return solution;
     }
 
-    public boolean plot(double a, double b) {
-
+    public boolean plot(double a, double b, int precision) {
         int w = 500;
         int h = 500;
-        int n = 50;
         String filename = "graph.png";
 
         BufferedImage myPicture = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
@@ -56,19 +51,19 @@ public class Pochodna {
 
         // grid
         g.setStroke(new BasicStroke(3));
-        g.setColor(Color.BLACK);
+        g.setColor(Color.lightGray);
         g.draw(new Line2D.Double(0, middleY, w, middleY));
         g.draw(new Line2D.Double(middleX, 0, middleX, h));
 
-        double step = (b-a) / n;
+        double step = (b-a) / precision;
 
-        Pochodna p = new Pochodna(fun);
+        Pochodna p = new Pochodna(function);
 
         for (double x = a; x < b; x += step) {
             // original
             g.setColor(Color.RED);
-            Point2D p1 = new Point2D.Double(w - (x + a) * w / (a - b), (fun.wartosc(x) + a) * h / (a - b));
-            Point2D p2 = new Point2D.Double(w - ((x + step) + a)* w / (a - b), (fun.wartosc(x + step) + a) * h / (a - b));
+            Point2D p1 = new Point2D.Double(w - (x + a) * w / (a - b), (function.wartosc(x) + a) * h / (a - b));
+            Point2D p2 = new Point2D.Double(w - ((x + step) + a) * w / (a - b), (function.wartosc(x + step) + a) * h / (a - b));
             g.draw(new Line2D.Double(p1, p2));
 
             // first integral
